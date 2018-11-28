@@ -53,7 +53,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (count == 0)
         {
             A[Front] = item;
-            count ++;
+            count++;
         }
         else
         {
@@ -66,7 +66,7 @@ public class Deque<Item> implements Iterable<Item> {
                 Front --;
             }
             A[Front] = item;
-            count ++;
+            count++;
         }
         if (count == A.length)
         {
@@ -119,9 +119,10 @@ public class Deque<Item> implements Iterable<Item> {
         {
             val = A[Front];
             A[Front] = null;
-            Front = (Front + 1) % count;
+            Front = (Front + 1) % A.length;
             count --;
         }
+
         if (count > 0 && count <= A.length/4)
         {
             resize(A.length/2);
