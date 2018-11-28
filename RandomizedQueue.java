@@ -13,21 +13,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         count = 0;
         Front = 0;
         End = 0;
-        deleted = 0;
     }
 
     private void resize(int max)
     {
         Item[] NewArray = (Item[]) new Object[max];
-        int item_count = distanceBetweenEnd();
+        int item_count = count;
         int current_index = Front;
         int i = 0;
         while (item_count > 0)
         {
-            if (A[current_index] != null)
-            {
-                NewArray[i] = A[current_index];
-            }
+            NewArray[i] = A[current_index];
             item_count --;
             current_index = (current_index + 1) % A.length;
             i ++;
@@ -39,29 +35,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             End = 0;
         }
         A = NewArray;
-        deleted = 0;
     }
 
-    private int distanceBetweenEnd()
-    {
-        int distance1 = Front - End;
-        int distance2 = Front - End;
-        if (distance1 < 0)
-        {
-            distance1 = -1 * distance1;
-        }
-        if (distance2 < 0)
-        {
-            distance2 = -1 * distance2;
-        }
-        distance2 = A.length - distance2;
-        if (distance1 > distance2)
-        {
-            return distance1;
-        }
-        return distance2;
-
-    }
 
     public boolean isEmpty()
     {
@@ -94,12 +69,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         {
             resize(A.length * 2);
         }
-        else if (deleted >= distanceBetweenEnd() || End == Front)
+
+    }
+
+    private int index_before(int current_index)
+    {
+        if (current_index > 0)
         {
-            resize(A.length);
+            return current_index - 1;
         }
-
-
+        if (current_index == 0)
+        {
+            return A.length - 1;
+        }
+        throw new java.util.NoSuchElementException("Negative indices not allowed.");
     }
 
     public Item dequeue()
@@ -108,25 +91,30 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         {
             throw new java.util.NoSuchElementException("The queue is empty");
         }
-
         Item val;
-        int maxIncrement = distanceBetweenEnd();
-        int randomNum = StdRandom.uniform(0, maxIncrement+1);
-        while (A[randomNum] == null)
+        if (count == 1)
         {
-            randomNum = StdRandom.uniform(0, maxIncrement+1);
+            val = A[Front];
+            Front = 0;
+            End = 0;
+            count = 0;
         }
-        val = A[randomNum];
-        count --;
-        deleted ++;
-        A[randomNum] = null;
+        else
+        {
+            int maxIncrement = count;
+            int randomNum = StdRandom.uniform(0, maxIncrement);
+            val = A[randomNum];
+            for (int i = randomNum+1; i < maxIncrement; i ++)
+            {
+                A[index_before(i)] = A[i];
+            }
+            A[maxIncrement] = null;
+            End = index_before(End);
+            count --;
+        }
         if (count > 0 && count <= A.length/4)
         {
             resize(A.length/2);
-        }
-        else if (deleted >= distanceBetweenEnd())
-        {
-            resize(A.length);
         }
         return val;
 
@@ -140,20 +128,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         Item val;
-        int maxIncrement = distanceBetweenEnd();
-        int randomNum = StdRandom.uniform(0, maxIncrement+1);
-        while (A[randomNum] == null)
+        if (count == 1)
         {
-            randomNum = StdRandom.uniform(0, maxIncrement+1);
+            val = A[Front];
         }
-        val = A[randomNum];
-        if (count > 0 && count <= A.length/4)
+        else
         {
-            resize(A.length/2);
-        }
-        else if (deleted >= distanceBetweenEnd())
-        {
-            resize(A.length);
+            int maxIncrement = count;
+            int randomNum = StdRandom.uniform(0, maxIncrement);
+            val = A[randomNum];
         }
         return val;
 
@@ -178,9 +161,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             }
             if (!Initialised)
             {
-                int maxIncrement = distanceBetweenEnd();
+                int maxIncrement = count;
                 int A_index;
-                for (int i = 0; i <= maxIncrement; i++)
+                for (int i = 0; i < maxIncrement; i++)
                 {
                     A_index = (Front + i) % count;
                     if (A[A_index] != null)
@@ -188,6 +171,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                         IterArray[i] = A[A_index];
                     }
                 }
+                Initialised = true;
+                StdRandom.shuffle(IterArray);
             }
             return true;
         }
@@ -200,9 +185,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             }
             if (!Initialised)
             {
-                int maxIncrement = distanceBetweenEnd();
+                int maxIncrement = count;
                 int A_index;
-                for (int i = 0; i <= maxIncrement; i++)
+                for (int i = 0; i < maxIncrement; i++)
                 {
                     A_index = (Front + i) % count;
                     if (A[A_index] != null)
@@ -210,6 +195,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                         IterArray[i] = A[A_index];
                     }
                 }
+                Initialised = true;
+                StdRandom.shuffle(IterArray);
             }
             Item val = IterArray[current_index];
             current_index ++;
@@ -226,26 +213,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args)
     {
-        RandomizedQueue a = new RandomizedQueue();
-        a.enqueue(3);
-        a.enqueue(4);
-        a.enqueue(5);
-        a.enqueue(66);
-        a.enqueue(7);
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        System.out.println(a.sample());
-        for (int i = 0; i < a.A.length; i ++)
-        {
-            System.out.println(a.A[i]);
-        }
+
 
     }
 
