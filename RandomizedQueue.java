@@ -72,18 +72,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     }
 
-    private int index_before(int current_index)
-    {
-        if (current_index > 0)
-        {
-            return current_index - 1;
-        }
-        if (current_index == 0)
-        {
-            return A.length - 1;
-        }
-        throw new java.util.NoSuchElementException("Negative indices not allowed.");
-    }
 
     public Item dequeue()
     {
@@ -103,13 +91,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         {
             int maxIncrement = count;
             int randomNum = StdRandom.uniform(0, maxIncrement);
-            val = A[randomNum];
-            for (int i = randomNum+1; i < maxIncrement; i ++)
-            {
-                A[index_before(i)] = A[i];
-            }
-            A[maxIncrement] = null;
-            End = index_before(End);
+            val = A[(Front + randomNum) % A.length];
+            Item temp = A[(Front + count - 1) % A.length];
+            A[(Front + randomNum) % A.length] = temp;
+            A[(Front + count - 1) % A.length] = null;
             count --;
         }
         if (count > 0 && count <= A.length/4)
@@ -136,7 +121,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         {
             int maxIncrement = count;
             int randomNum = StdRandom.uniform(0, maxIncrement);
-            val = A[randomNum];
+            val = A[(Front + randomNum) % A.length];
         }
         return val;
 
@@ -213,7 +198,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args)
     {
-
 
     }
 
