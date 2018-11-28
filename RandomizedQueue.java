@@ -6,7 +6,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int count;
     private int Front;
     private int End;
-    private int deleted;
 
     public RandomizedQueue()
     {
@@ -198,6 +197,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args)
     {
+
 
     }
 
