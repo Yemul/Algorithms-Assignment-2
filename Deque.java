@@ -178,7 +178,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         public boolean hasNext()
         {
-            return (ItemRemained == 0);
+            return (ItemRemained != 0);
         }
 
         public void remove()
@@ -195,13 +195,13 @@ public class Deque<Item> implements Iterable<Item> {
             Item val;
             val = A[current];
             current = (current + 1) % A.length;
+            ItemRemained --;
             return val;
         }
     }
 
     public static void main(String[] args)
     {
-
 
     }
 }
