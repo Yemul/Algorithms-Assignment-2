@@ -15,10 +15,17 @@ public class Deque<Item> implements Iterable<Item> {
     private void resize(int max)
     {
         Item[] NewArray = (Item[]) new Object[max];
-        for (int i = 0; i < count; i ++)
+        int item_count = count;
+        int current_index = Front;
+        int i = 0;
+        while (item_count > 0)
         {
-            NewArray[i] = A[i];
+            NewArray[i] = A[current_index];
+            item_count --;
+            i ++;
         }
+        Front = 0;
+        End = count - 1;
         A = NewArray;
     }
 
@@ -34,23 +41,86 @@ public class Deque<Item> implements Iterable<Item> {
 
     public void addFirst(Item item)
     {
+        if (item == null)
+        {
+            throw new java.lang.IllegalArgumentException("The input cannot be null.");
+        }
 
 
     }
 
     public void addLast(Item item)
     {
+        if (item == null)
+        {
+            throw new java.lang.IllegalArgumentException("The input cannot be null.");
+        }
+
 
     }
 
     public Item removeFirst()
     {
+        Item val;
+        if (count == 0)
+        {
+            throw new java.util.NoSuchElementException("The queue is empty");
+        }
+        if (count == 1)
+        {
+            val = A[Front];
+            Front = 0;
+            End = 0;
+            count --;
+        }
+        else
+        {
+            val = A[Front];
+            A[Front] = null;
+            Front = (Front + 1) % count;
+            count --;
+        }
+        if (count > 0 && count <= A.length/4)
+        {
+            resize(A.length/2);
+        }
+        return val;
 
     }
 
     public Item removeLast()
     {
-
+        Item val;
+        if (count == 0)
+        {
+            throw new java.util.NoSuchElementException("The queue is empty");
+        }
+        if (count == 1)
+        {
+            val = A[Front];
+            Front = 0;
+            End = 0;
+            count --;
+        }
+        else
+        {
+            val = A[End];
+            A[End] = null;
+            if (End - 1 == -1)
+            {
+                End = A.length - 1;
+            }
+            else
+            {
+                End --;
+            }
+            count --;
+        }
+        if (count > 0 && count <= A.length/4)
+        {
+            resize(A.length/2);
+        }
+        return val;
     }
 
     public Iterator<Item> iterator()
