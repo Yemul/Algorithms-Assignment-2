@@ -111,6 +111,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (count == 1)
         {
             val = A[Front];
+            A[Front] = null;
             Front = 0;
             End = 0;
             count --;
@@ -141,6 +142,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (count == 1)
         {
             val = A[Front];
+            A[Front] = null;
             Front = 0;
             End = 0;
             count --;

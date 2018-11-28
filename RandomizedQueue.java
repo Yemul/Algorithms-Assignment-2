@@ -82,6 +82,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (count == 1)
         {
             val = A[Front];
+            A[Front] = null;
             Front = 0;
             End = 0;
             count = 0;
@@ -94,7 +95,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             Item temp = A[(Front + count - 1) % A.length];
             A[(Front + randomNum) % A.length] = temp;
             A[(Front + count - 1) % A.length] = null;
-            count --;
+            count--;
+            if (End - 1 == -1)
+            {
+                End = A.length - 1;
+            }
+            else
+            {
+                End = End - 1;
+            }
+
         }
         if (count > 0 && count <= A.length/4)
         {
