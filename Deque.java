@@ -190,7 +190,7 @@ public class Deque<Item> implements Iterable<Item> {
         {
             if (!hasNext())
             {
-                throw new java.util.NoSuchElementException("No more elements in the queue");
+                throw new java.util.NoSuchElementException("No more elements in the queue.");
             }
             Item val;
             val = A[current];
