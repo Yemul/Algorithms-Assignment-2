@@ -22,10 +22,15 @@ public class Deque<Item> implements Iterable<Item> {
         {
             NewArray[i] = A[current_index];
             item_count --;
+            current_index = (current_index + 1) % A.length;
             i ++;
         }
         Front = 0;
         End = count - 1;
+        if (End < 0)
+        {
+            End = 0;
+        }
         A = NewArray;
     }
 
@@ -45,6 +50,28 @@ public class Deque<Item> implements Iterable<Item> {
         {
             throw new java.lang.IllegalArgumentException("The input cannot be null.");
         }
+        if (count == 0)
+        {
+            A[Front] = item;
+            count ++;
+        }
+        else
+        {
+            if (Front - 1 == -1)
+            {
+                Front = A.length - 1;
+            }
+            else
+            {
+                Front --;
+            }
+            A[Front] = item;
+            count ++;
+        }
+        if (count == A.length)
+        {
+            resize(A.length * 2);
+        }
 
 
     }
@@ -54,6 +81,21 @@ public class Deque<Item> implements Iterable<Item> {
         if (item == null)
         {
             throw new java.lang.IllegalArgumentException("The input cannot be null.");
+        }
+        if (count == 0)
+        {
+            A[Front] = item;
+            count ++;
+        }
+        else
+        {
+            End = (End + 1) % A.length;
+            A[End] = item;
+            count ++;
+        }
+        if (count == A.length)
+        {
+            resize(A.length * 2);
         }
 
 
@@ -125,11 +167,41 @@ public class Deque<Item> implements Iterable<Item> {
 
     public Iterator<Item> iterator()
     {
+        return new ArrayIterator();
 
+    }
+
+    private class ArrayIterator implements Iterator<Item>
+    {
+        private int current = Front;
+        private int ItemRemained = count;
+
+        public boolean hasNext()
+        {
+            return (ItemRemained == 0);
+        }
+
+        public void remove()
+        {
+            throw new java.lang.UnsupportedOperationException("This has not allowed.");
+        }
+
+        public Item next()
+        {
+            if (!hasNext())
+            {
+                throw new java.util.NoSuchElementException("No more elements in the queue");
+            }
+            Item val;
+            val = A[current];
+            current = (current + 1) % A.length;
+            return val;
+        }
     }
 
     public static void main(String[] args)
     {
+
 
     }
 }
