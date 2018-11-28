@@ -149,7 +149,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 int A_index;
                 for (int i = 0; i < maxIncrement; i++)
                 {
-                    A_index = (Front + i) % count;
+                    A_index = (Front + i) % A.length;
                     if (A[A_index] != null)
                     {
                         IterArray[i] = A[A_index];
@@ -173,7 +173,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 int A_index;
                 for (int i = 0; i < maxIncrement; i++)
                 {
-                    A_index = (Front + i) % count;
+                    A_index = (Front + i) % A.length;
                     if (A[A_index] != null)
                     {
                         IterArray[i] = A[A_index];
